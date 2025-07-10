@@ -28,10 +28,6 @@ class ClientAndServerExecutionResponse:
 
 async def client_and_server_execution(payload: Dict[str, Any], streaming_callback: Optional[Any] = None) -> ClientAndServerExecutionResponse:
     try:
-<<<<<<< HEAD
-=======
-        print("DEBUG: Starting client_and_server_execution")
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
         result = ClientAndServerExecutionResponse()
 
         selected_server_credentials = payload.get("selected_server_credentials")
@@ -560,7 +556,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
             # Initial LLM call
             initial_llm_response = await gemini_processor(client_details)
             print("Initial LLM response:", initial_llm_response)
-<<<<<<< HEAD
             if not initial_llm_response.Status:
                 result.Error = initial_llm_response.Error
                 result.Status = initial_llm_response.Status
@@ -573,31 +568,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
             result.Data["total_output_tokens"] += initial_llm_response.Data.get("total_output_tokens", 0)
             result.Data["final_llm_response"] = initial_llm_response.Data.get("final_llm_response")
             result.Data["llm_responses_arr"].append(initial_llm_response.Data.get("final_llm_response"))
-=======
-            print("Initial LLM response type:", type(initial_llm_response))
-            # Check if initial_llm_response is a dict (direct return) or an object with Status attribute
-            if isinstance(initial_llm_response, dict):
-                if not initial_llm_response.get('Status', False):
-                    result.Error = initial_llm_response.get('Error')
-                    result.Status = initial_llm_response.get('Status', False)
-                    return result
-                initial_llm_data = initial_llm_response.get('Data', {})
-            else:
-                if not initial_llm_response.Status:
-                    result.Error = initial_llm_response.Error
-                    result.Status = initial_llm_response.Status
-                    return result
-                initial_llm_data = initial_llm_response.Data or {}
-            
-            extracted_result = extract_data_from_response(initial_llm_data.get("messages", [{}])[0] if initial_llm_data else "")
-            
-            result.Data["total_llm_calls"] += 1
-            result.Data["total_tokens"] += initial_llm_data.get("total_tokens", 0)
-            result.Data["total_input_tokens"] += initial_llm_data.get("total_input_tokens", 0)
-            result.Data["total_output_tokens"] += initial_llm_data.get("total_output_tokens", 0)
-            result.Data["final_llm_response"] = initial_llm_data.get("final_llm_response")
-            result.Data["llm_responses_arr"].append(initial_llm_data.get("final_llm_response"))
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
 
             if streaming_callback and streaming_callback.get("is_stream"):
                 await streaming_callback["streamCallbacks"].on_data(json.dumps({
@@ -606,7 +576,7 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                     "Status": True,
                     "StreamingStatus": "IN-PROGRESS",
                     "Action": "NOTIFICATION"
-            }))
+                }))
             
             if extracted_result["isFunctionCall"]:
                 final_tool_calls = []
@@ -635,7 +605,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                     
                     response = await gemini_processor(client_details)
                     print(response)
-<<<<<<< HEAD
                     if not response.Status:
                         result.Error = response.Error
                         result.Status = response.Status
@@ -655,36 +624,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                         result.Status = response.Status
 
                         for message in response.Data.get("messages", []):
-=======
-                    # Check if response is a dict (direct return) or an object with Status attribute
-                    if isinstance(response, dict):
-                        if not response.get('Status', False):
-                            result.Error = response.get('Error')
-                            result.Status = response.get('Status', False)
-                            return result
-                        response_data = response.get('Data', {})
-                    else:
-                        if not response.Status:
-                            result.Error = response.Error
-                            result.Status = response.Status
-                            return result
-                        response_data = response.Data or {}
-
-                    result.Data["total_llm_calls"] += 1
-                    result.Data["total_tokens"] += response_data.get("total_tokens", 0)
-                    result.Data["total_input_tokens"] += response_data.get("total_input_tokens", 0)
-                    result.Data["total_output_tokens"] += response_data.get("total_output_tokens", 0)
-                    result.Data["final_llm_response"] = response_data.get("final_llm_response")
-                    result.Data["llm_responses_arr"].append(response_data.get("final_llm_response"))
-
-                    if response_data.get("output_type") == "text":
-                        result.Data["messages"].extend(response_data.get("messages", []))
-                        result.Data["output_type"] = response_data.get("output_type", "")
-                        result.Error = response.Error if not isinstance(response, dict) else response.get('Error')
-                        result.Status = response.Status if not isinstance(response, dict) else response.get('Status', False)
-
-                        for message in response_data.get("messages", []):
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
                             if streaming_callback and streaming_callback.get("is_stream"):
                                 await streaming_callback["streamCallbacks"].on_data(json.dumps({
                                     "Data": message,
@@ -704,11 +643,7 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                             "Action": "NOTIFICATION"
                         }))
 
-<<<<<<< HEAD
                     final_llm_response = response.Data.get("final_llm_response") if response.Data else None
-=======
-                    final_llm_response = response_data.get("final_llm_response") if response_data else None
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
                     candidates = final_llm_response.get("candidates", []) if final_llm_response else []
                     first_candidate = candidates[0] if candidates and len(candidates) > 0 else {}
                     content = first_candidate.get("content", {}) if isinstance(first_candidate, dict) else {}
@@ -768,7 +703,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                 client_details["tools"] = []
 
                 normal_response = await gemini_processor(client_details)
-<<<<<<< HEAD
                 result.Data["total_llm_calls"] += 1
                 result.Data["total_tokens"] += normal_response.Data.get("total_tokens", 0)
                 result.Data["total_input_tokens"] += normal_response.Data.get("total_input_tokens", 0)
@@ -781,37 +715,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                 result.Status = normal_response.Status
 
                 final_llm_response = normal_response.Data.get("final_llm_response") if normal_response.Data else None
-=======
-                
-                # Check if normal_response is a dict (direct return) or an object with Status attribute
-                if isinstance(normal_response, dict):
-                    if not normal_response.get('Status', False):
-                        result.Error = normal_response.get('Error')
-                        result.Status = normal_response.get('Status', False)
-                        return result
-                    normal_response_data = normal_response.get('Data', {})
-                    result.Error = normal_response.get('Error')
-                    result.Status = normal_response.get('Status', False)
-                else:
-                    if not normal_response.Status:
-                        result.Error = normal_response.Error
-                        result.Status = normal_response.Status
-                        return result
-                    normal_response_data = normal_response.Data or {}
-                    result.Error = normal_response.Error
-                    result.Status = normal_response.Status
-                
-                result.Data["total_llm_calls"] += 1
-                result.Data["total_tokens"] += normal_response_data.get("total_tokens", 0)
-                result.Data["total_input_tokens"] += normal_response_data.get("total_input_tokens", 0)
-                result.Data["total_output_tokens"] += normal_response_data.get("total_output_tokens", 0)
-                result.Data["final_llm_response"] = normal_response_data.get("final_llm_response")
-                result.Data["llm_responses_arr"].append(normal_response_data.get("final_llm_response"))
-
-                result.Data["output_type"] = normal_response_data.get("output_type", "")
-
-                final_llm_response = normal_response_data.get("final_llm_response") if normal_response_data else None
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
                 candidates = final_llm_response.get("candidates", []) if final_llm_response else []
                 first_candidate = candidates[0] if candidates and len(candidates) > 0 else {}
                 content = first_candidate.get("content", {}) if isinstance(first_candidate, dict) else {}
@@ -819,16 +722,9 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
 
                 text_content = content.get("text")
 
-<<<<<<< HEAD
                 if not normal_response.Status or (text_content is not None and text_content != ""):
                     result.Data["messages"] = normal_response.Data.get("messages", [])
                     for message in normal_response.Data.get("messages", []):
-=======
-                is_error = isinstance(normal_response, dict) and not normal_response.get('Status', False) or not isinstance(normal_response, dict) and not normal_response.Status
-                if is_error or (text_content is not None and text_content != ""):
-                    result.Data["messages"] = normal_response_data.get("messages", [])
-                    for message in normal_response_data.get("messages", []):
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
                         if streaming_callback and streaming_callback.get("is_stream"):
                             await streaming_callback["streamCallbacks"].on_data(json.dumps({
                                 "Data": message,
@@ -961,10 +857,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
 
     except Exception as e:
         logging.error(f"Exception in client_and_server_execution: {e}")
-<<<<<<< HEAD
-=======
-        # Create a safe response object
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
         res = ClientAndServerExecutionResponse()
         res.Error = str(e)
         res.Status = False
@@ -1023,21 +915,28 @@ async def call_and_execute_tool(
         case "FACEBOOK_ADS_MCP":
             args["__credentials__"]   = creds
             args["server_credentials"] = creds
+        case "MCP-WIKIDATA":
+            args["__credentials__"]   = creds
+            args["server_credentials"] = creds
+        case "MCP-PORTAINER":
+            args["__credentials__"]   = creds
+            args["server_credentials"] = creds
+        case "MCP-FARGATE":
+            args["__credentials__"]   = creds
+            args["server_credentials"] = creds
         case "abstractapi-mcp-server":
-            args["__credentials__"]   = creds
+            args["credentials"]   = creds
             args["server_credentials"] = creds
-<<<<<<< HEAD
-=======
         case "MCP-PINECONE":
-            args["__credentials__"]   = creds
+            args["credentials"]   = creds
             args["server_credentials"] = creds
->>>>>>> d6dcc5e (Add MCP-PINECONE implementation)
         case _:
             pass
 
     client = MCPServers[selected_server]
 
     try:
+        
         # perform the tool call
         raw_result = await client.call_tool(tool_name, args)
         
