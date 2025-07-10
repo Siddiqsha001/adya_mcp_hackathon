@@ -44,5 +44,5 @@ ServersConfig = [
 			"--api-key",
 			"pcsk_4wxP35_Paz2m6Fjgg4u1sBpeEC45LABjQhKykMNRqAtbzxEc4XRpnRRFSHZ3BeM9Pvf91D"
 		]
-	},
+	}
 ]
