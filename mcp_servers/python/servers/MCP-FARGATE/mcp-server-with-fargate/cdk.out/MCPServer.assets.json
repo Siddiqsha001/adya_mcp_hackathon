@@ -1,0 +1,34 @@
+{
+  "version": "45.0.0",
+  "files": {
+    "c7da3c4b4c496d78d117c07315aafb312bfa09de762319b73e523188653db999": {
+      "displayName": "MCPServer Template",
+      "source": {
+        "path": "MCPServer.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "c7da3c4b4c496d78d117c07315aafb312bfa09de762319b73e523188653db999.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {
+    "mcp-server-image-fb58ce434621dfe0fef30e2bc98c394acfa3aa5046b127376135162af4fac2ca": {
+      "displayName": "mcp-server-image",
+      "source": {
+        "directory": "asset.fb58ce434621dfe0fef30e2bc98c394acfa3aa5046b127376135162af4fac2ca"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "repositoryName": "cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}",
+          "imageTag": "fb58ce434621dfe0fef30e2bc98c394acfa3aa5046b127376135162af4fac2ca",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-image-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  }
+}
