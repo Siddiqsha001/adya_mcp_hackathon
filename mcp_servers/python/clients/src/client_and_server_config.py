@@ -34,6 +34,27 @@ ServersConfig = [
 			"mcp-pinecone"
 		]
 	},
+     {
+		"server_name":"MCP-WIKIDATA",
+       		 "command":"python",
+       		 "args": [
+            		"../servers/MCP-WIKIDATA/mcp-wikidata/src/server.py"
+        	]
+    },
+    {
+		"server_name":"MCP-PORTAINER",
+		"command":"python",
+		"args": [
+			"../servers/MCP-PORTAINER/src/server.py"
+		]
+    },
+    {
+        	"server_name": "MCP-FARGATE",
+		"command":"python",
+		"args": [
+			"../servers/mcp-server-with-fargate/src/mcp_fargate_server.py"
+		]
+    },
     {
 		"server_name": "MCP-PINECONE-PUBLISHED",
 		"command":"uvx",
